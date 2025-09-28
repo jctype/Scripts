@@ -1,4 +1,3 @@
-// AI/Core/ScentSystem.cs
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -156,7 +155,7 @@ namespace ProjectHounded.AI.Core
                 center + new Vector3Int(-1, 0, 0),
                 center + new Vector3Int(0, 0, 1),
                 center + new Vector3Int(0, 0, -1)
-            };
+            }; 
         }
 
         // Debug visualization
@@ -181,7 +180,10 @@ namespace ProjectHounded.AI.Core
             public Vector3 WorldPosition { get; private set; }
             public float Freshness { get; set; } = 1.0f;
             public float Strength { get; set; } = 0.0f;
-            public bool IsActive => Freshness > 0.01f && Strength > 0.01f;
+            public bool IsActive
+            {
+                get { return Freshness > 0.01f && Strength > 0.01f; }
+            }
 
             public ScentCell(Vector3Int gridPos, float cellSize)
             {
@@ -199,6 +201,31 @@ namespace ProjectHounded.AI.Core
                 Freshness = Mathf.Clamp01(Freshness - decayAmount);
                 // Strength decays along with freshness
                 Strength *= Freshness;
+            }
+        }
+
+        [System.Serializable]
+        public struct ScentData
+        {
+            public Vector3 WorldPosition;
+            public float Freshness;
+            public float Strength;
+
+            public static ScentData Invalid
+            {
+                get
+                {
+                    ScentData result;
+                    result.WorldPosition = Vector3.zero;
+                    result.Freshness = 0f;
+                    result.Strength = 0f;
+                    return result;
+                }
+            }
+
+            public bool IsValid
+            {
+                get { return Freshness > 0.01f && Strength > 0.01f; }
             }
         }
     }

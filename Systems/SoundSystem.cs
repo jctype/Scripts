@@ -1,4 +1,3 @@
-// AI/Core/SoundSystem.cs
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -46,6 +45,25 @@ namespace ProjectHounded.AI.Core
                 if (Time.time - activeSoundEvents[i].CreationTime > maxSoundLifetime)
                     activeSoundEvents.RemoveAt(i);
             }
+        }
+
+        [System.Serializable]
+        public struct SoundEvent
+        {
+            public Vector3 WorldPosition;
+            public float Loudness;
+            public string Type;
+            public float CreationTime;
+
+            public static SoundEvent Invalid => new SoundEvent
+            {
+                WorldPosition = Vector3.zero,
+                Loudness = 0f,
+                Type = "",
+                CreationTime = 0f
+            };
+
+            public bool IsValid => Loudness > 0.01f;
         }
     }
 }

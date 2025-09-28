@@ -1,4 +1,3 @@
-// AI/Core/PlayerDetectionSystem.cs
 using UnityEngine;
 
 namespace ProjectHounded.AI.Core

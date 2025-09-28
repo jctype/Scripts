@@ -1,0 +1,115 @@
+// File: AI\Actions\UtilityActions.cs
+public string actionName;
+
+// File: AI\Considerations\TimeSinceLastClueConsideration.cs
+public AnimationCurve timeCurve = AnimationCurve.EaseInOut(0, 1, 30, 0); // Score drops over 30 seconds
+
+// File: AI\States\HunterHypothesis.cs
+public Vector3 TargetLocation;
+public float confidence = 0f;
+
+// File: AI\States\HunterState.cs
+public Vector3 position;
+public float health = 100f;
+public float stamina = 100f;
+
+// File: AI\States\WorldState.cs
+public bool IsPlayerInSight = false;
+public float TimeSinceLastClue = 0f;
+public Vector3 WorldPosition;
+public float Freshness = 0f;
+public Vector3 WorldPosition;
+public float Loudness = 0f;
+public string Type = "";
+public ScentClue PrimaryScentClue = new ScentClue();
+public SoundClue PrimarySoundClue = new SoundClue();
+
+// File: AI\_Core\HunterAIController.cs
+public float decisionInterval = 0.5f;
+public float patrolSpeed = 3.5f;
+public float chaseSpeed = 6f;
+public float patrolRadius = 10f;
+public float investigationTime = 5f;
+public GameObject scentManager; // GameObject with ScentSystem script
+public GameObject soundManager; // GameObject with SoundSystem script
+public GameObject playerDetection; // GameObject with PlayerDetectionSystem script
+
+// File: AI\_Core\HunterAICore_BaseClasses.cs
+[TextArea] public string description;
+public Consideration[] considerations;
+public string actionName;
+[TextArea] public string actionDescription;
+
+// File: AI\_Core\HunterAICore_DataStructures.cs
+[Range(0f, 1f)] public float Certainty = 0.5f;
+[Range(0f, 1f)] public float Suspicion = 0.1f;
+[Range(0f, 1f)] public float Focus = 1.0f;
+[Range(0f, 1f)] public float Fatigue = 0.0f;
+[Range(0f, 1f)] public float Frustration = 0.0f;
+public Vector3 TargetLocation = Vector3.zero;
+[Range(0f, 1f)] public float Confidence = 0.0f;
+public Vector3 WorldPosition;
+[Range(0f, 1f)] public float Freshness;
+[Range(0f, 1f)] public float Strength;
+public Vector3 WorldPosition;
+[Range(0f, 1f)] public float Loudness;
+public string Type;
+public float CreationTime;
+public float CurrentLoudness;
+public float PropagationRadius;
+public ScentData PrimaryScentClue = ScentData.Invalid;
+public SoundEvent PrimarySoundClue = SoundEvent.Invalid;
+public float TimeSinceLastClue = Mathf.Infinity;
+public bool IsPlayerInSight = false;
+
+// File: AI\_Core\HunterAIMovement.cs
+public float moveSpeed = 3f;
+public float rotationSpeed = 120f;
+public Animator animator;
+
+// File: CameraSwitcher.cs
+public CinemachineVirtualCamera thirdPersonCam; // Assign your third-person cam
+public CinemachineVirtualCamera firstPersonCam; // Assign your first-person cam
+
+// File: fpsLook.cs
+public float mouseSensitivity = 100f;
+
+// File: Player\PlayerCameraController.cs
+public Transform player;          // Your PlayerArmature
+public Camera firstPersonCam;     // 1st camera
+public Camera thirdPersonCam;     // 3rd camera
+public Vector3 thirdPersonOffset = new Vector3(0, 2, -4);
+public float thirdPersonSmoothSpeed = 0.1f;
+public float mouseSensitivity = 100f;
+public float pitchMin = -30f;
+public float pitchMax = 60f;
+
+// File: PlayerJump.cs
+public float jumpforce = 10f;
+
+// File: Systems\PlayerDetectionSystem.cs
+public float sightRange = 20f;
+public Transform hunterEyePosition;
+public GameObject playerObject;
+
+// File: Systems\ScentSystem.cs
+public float globalDecayRate = 0.1f; // Scent freshness decay per second
+public float diffusionRate = 0.5f; // How quickly scent spreads to adjacent areas
+public float maxScentLifetime = 60f; // Maximum time scent persists (seconds)
+public float gridCellSize = 2.0f; // Meters per grid cell
+public bool visualizeScentClouds = false;
+public Gradient scentVisualizationGradient;
+public Vector3 WorldPosition { get; private set; }
+public float Freshness { get; set; } = 1.0f;
+public float Strength { get; set; } = 0.0f;
+public bool IsActive
+public Vector3 WorldPosition;
+public float Freshness;
+public float Strength;
+
+// File: Systems\SoundSystem.cs
+public float maxSoundLifetime = 10f;
+public Vector3 WorldPosition;
+public float Loudness;
+public string Type;
+public float CreationTime;
