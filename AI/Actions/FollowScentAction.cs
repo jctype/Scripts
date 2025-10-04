@@ -1,21 +1,39 @@
-// FollowScentAction.cs
 using UnityEngine;
+using UnityEngine.AI;
 using ProjectHounded.AI.Core;
 
-[CreateAssetMenu(menuName = "HunterAI/Actions/Follow Scent")]
-public class FollowScentAction : UtilityAction
+namespace ProjectHounded.AI.Actions
 {
-    public override bool IsValid(HunterState hunterState, WorldState worldState)
+    public class FollowScentAction
     {
-        bool isValid = worldState.PrimaryScentClue.Freshness > 0.1f;
-        Debug.Log($"[FollowScent] Valid: {isValid} (Scent Freshness: {worldState.PrimaryScentClue.Freshness:F2})");
-        return isValid;
-    }
+        private HunterAIController hunterController;
+        private ScentSystem scentSystem;
 
-    public override void Execute(HunterState hunterState, WorldState worldState)
-    {
-        Debug.Log($"[FollowScent] EXECUTING - Moving to scent at {worldState.PrimaryScentClue.WorldPosition} " +
-                  $"(Freshness: {worldState.PrimaryScentClue.Freshness:F2})");
-        // Add movement logic here
+        public string actionName = "Follow Scent";
+        public string actionDescription = "Follow the strongest scent trail.";
+
+        public FollowScentAction(HunterAIController controller, ScentSystem scentSys)
+        {
+            hunterController = controller;
+            scentSystem = scentSys;
+        }
+
+        public void Execute()
+        {
+            Debug.Log("FollowScentAction.Execute() started");
+            if (hunterController == null || scentSystem == null) return;
+
+            ScentData scentData = scentSystem.GetMostRelevantScent();
+            if (scentData.IsValid)
+            {
+                NavMeshAgent agent = hunterController.GetComponent<NavMeshAgent>();
+                if (agent != null)
+                {
+                    agent.speed = hunterController.patrolSpeed;
+                    agent.SetDestination(scentData.WorldPosition);
+                }
+            }
+            Debug.Log("FollowScentAction.Execute() ended");
+        }
     }
 }

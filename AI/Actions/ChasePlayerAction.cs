@@ -1,18 +1,36 @@
-// ChasePlayerAction.cs
 using UnityEngine;
+using UnityEngine.AI;
 
-[CreateAssetMenu(menuName = "HunterAI/Actions/Chase Player")]
-public class ChasePlayerAction : UtilityAction
+namespace ProjectHounded.AI.Actions
 {
-    public override bool IsValid(HunterState hunterState, WorldState worldState)
+    public class ChasePlayerAction
     {
-        bool isValid = worldState.IsPlayerInSight;
-        Debug.Log($"[ChasePlayer] Valid: {isValid} (Player in sight: {worldState.IsPlayerInSight})");
-        return isValid;
-    }
+        private HunterAIController hunterController;
 
-    public override void Execute(HunterState hunterState, WorldState worldState)
-    {
-        Debug.Log($"[ChasePlayer] EXECUTING - Player spotted! Initiating chase!");
+        public string actionName = "Chase Player";
+        public string actionDescription = "Chase the player aggressively.";
+
+        public ChasePlayerAction(HunterAIController controller)
+        {
+            hunterController = controller;
+        }
+
+        public void Execute()
+        {
+            Debug.Log("ChasePlayerAction.Execute() started");
+            if (hunterController == null) return;
+
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null)
+            {
+                NavMeshAgent agent = hunterController.GetComponent<NavMeshAgent>();
+                if (agent != null)
+                {
+                    agent.speed = hunterController.chaseSpeed;
+                    agent.SetDestination(player.transform.position);
+                }
+            }
+            Debug.Log("ChasePlayerAction.Execute() ended");
+        }
     }
 }

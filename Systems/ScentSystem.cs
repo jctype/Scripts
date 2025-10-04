@@ -204,29 +204,6 @@ namespace ProjectHounded.AI.Core
             }
         }
 
-        [System.Serializable]
-        public struct ScentData
-        {
-            public Vector3 WorldPosition;
-            public float Freshness;
-            public float Strength;
 
-            public static ScentData Invalid
-            {
-                get
-                {
-                    ScentData result;
-                    result.WorldPosition = Vector3.zero;
-                    result.Freshness = 0f;
-                    result.Strength = 0f;
-                    return result;
-                }
-            }
-
-            public bool IsValid
-            {
-                get { return Freshness > 0.01f && Strength > 0.01f; }
-            }
-        }
     }
 }

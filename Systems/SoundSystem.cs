@@ -33,7 +33,9 @@ namespace ProjectHounded.AI.Core
                 WorldPosition = position,
                 Loudness = loudness,
                 Type = type,
-                CreationTime = Time.time
+                CreationTime = Time.time,
+                CurrentLoudness = loudness,
+                PropagationRadius = 10f // Default propagation radius
             };
             activeSoundEvents.Add(newEvent);
         }
@@ -47,23 +49,6 @@ namespace ProjectHounded.AI.Core
             }
         }
 
-        [System.Serializable]
-        public struct SoundEvent
-        {
-            public Vector3 WorldPosition;
-            public float Loudness;
-            public string Type;
-            public float CreationTime;
 
-            public static SoundEvent Invalid => new SoundEvent
-            {
-                WorldPosition = Vector3.zero,
-                Loudness = 0f,
-                Type = "",
-                CreationTime = 0f
-            };
-
-            public bool IsValid => Loudness > 0.01f;
-        }
     }
 }

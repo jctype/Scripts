@@ -28,6 +28,7 @@ namespace ProjectHounded.AI.Core
         [Range(0f, 1f)] public float Freshness;
         [Range(0f, 1f)] public float Strength;
         public static ScentData Invalid => new ScentData { Freshness = 0f, Strength = 0f };
+        public bool IsValid => Freshness > 0.01f && Strength > 0.01f;
     }
 
     public struct SoundEvent
@@ -45,6 +46,8 @@ namespace ProjectHounded.AI.Core
             CurrentLoudness = 0f,
             CreationTime = -1f
         };
+
+        public bool IsValid => Loudness > 0.01f;
     }
 
     [System.Serializable]

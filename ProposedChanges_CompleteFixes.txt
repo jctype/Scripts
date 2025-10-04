@@ -1,0 +1,148 @@
+/*
+ * Proposed comprehensive changes and additions for the "Hounded" game scripts
+ * This file contains code snippets and explanations for fixes, completions, and improvements
+ * to be integrated into the existing codebase.
+ *
+ * 1. Consolidate HunterAIController usage:
+ *    - Ensure HunterManager uses the detailed HunterAIController from Assets/Scripts/Hunter/HunterAIController.cs
+ *    - Remove or archive the basic stub version in GameManager if present.
+ *
+ * 2. PlayerProfileManager.cs improvements:
+ *    - Add Update method to handle decay of all profile weights over time.
+ *    - Ensure ModifyProfileWeight clamps weights properly.
+ *
+ * 3. Resolve duplicate data structures:
+ *    - Use the detailed ScentData and SoundEvent structs from HunterAICore_DataStructures.cs
+ *    - Update references in ScentSystem.cs, SoundSystem.cs, and AI states accordingly.
+ *
+ * 4. Complete AI Actions (example for ChasePlayerAction.cs):
+ */
+
+using UnityEngine;
+using UnityEngine.AI;
+
+namespace ProjectHounded.AI.Actions
+{
+    public class ChasePlayerAction : UtilityAction
+    {
+        private HunterAIController hunterController;
+
+        public ChasePlayerAction(HunterAIController controller)
+        {
+            hunterController = controller;
+            actionName = "Chase Player";
+            actionDescription = "Chase the player aggressively.";
+        }
+
+        public override void Execute()
+        {
+            if (hunterController == null) return;
+
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null)
+            {
+                NavMeshAgent agent = hunterController.GetComponent<NavMeshAgent>();
+                if (agent != null)
+                {
+                    agent.speed = hunterController.chaseSpeed;
+                    agent.SetDestination(player.transform.position);
+                }
+            }
+        }
+    }
+}
+
+/*
+ * Similar implementations should be done for FollowScentAction.cs, InvestigateSoundAction.cs, PatrolAction.cs, etc.
+ *
+ * 5. Fix disconnected references:
+ *    - Add missing EnvironmentDetector.cs and TimeManager.cs if not present.
+ *    - Example stub for EnvironmentDetector.cs:
+ */
+
+using UnityEngine;
+
+public class EnvironmentDetector : MonoBehaviour
+{
+    // Example method to detect environment type or hazards
+    public string GetCurrentEnvironment()
+    {
+        // Placeholder logic
+        return "Forest";
+    }
+}
+
+/*
+ * Example stub for TimeManager.cs singleton:
+ */
+
+using UnityEngine;
+
+public class TimeManager : MonoBehaviour
+{
+    public static TimeManager Instance;
+
+    public float CurrentTime { get; private set; }
+
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
+    void Update()
+    {
+        CurrentTime += Time.deltaTime;
+    }
+}
+
+/*
+ * 6. Simplify HunterAnimControl.cs:
+ *    - Break down complex animation logic into smaller methods.
+ *    - Ensure animation triggers match AI states and intents.
+ *
+ * 7. Fix HoundedDebugUI.cs:
+ *    - Update references to HunterUtilityAI fields to match actual implementation.
+ *    - Add proper bindings to sliders and toggles.
+ *
+ * 8. Update HunterManager.cs to use detailed HunterAIController:
+ */
+
+using UnityEngine;
+
+public class HunterManager : MonoBehaviour
+{
+    public HunterAIController HunterActor; // Use detailed controller
+    public HunterUtilityAI HunterBrain;
+
+    void Start()
+    {
+        if (HunterActor == null)
+        {
+            HunterActor = GetComponent<HunterAIController>();
+        }
+        if (HunterBrain == null)
+        {
+            HunterBrain = GetComponent<HunterUtilityAI>();
+        }
+        if (HunterBrain != null && HunterActor != null)
+        {
+            HunterBrain.hunterController = HunterActor;
+        }
+    }
+
+    void Update()
+    {
+        if (HunterBrain != null)
+        {
+            HunterBrain.Tick();
+        }
+    }
+}
+
+/*
+ * Follow-up:
+ * - After reviewing this proposal, implement the changes incrementally.
+ * - Test integration of AI decision making, player profile updates, and animation control.
+ * - Refactor and clean up duplicate or unused scripts.
+ */

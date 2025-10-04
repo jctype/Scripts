@@ -1,21 +1,39 @@
 using UnityEngine;
+using UnityEngine.AI;
 
-[CreateAssetMenu(fileName = "PatrolAction", menuName = "AI/Patrol Action")]
-public class PatrolAction : UtilityAction
+namespace ProjectHounded.AI.Actions
 {
-    public override bool IsValid(HunterState state, WorldState worldState)
+    public class PatrolAction
     {
-        return !worldState.IsPlayerInSight && worldState.TimeSinceLastClue > 5f;
-    }
+        private HunterAIController hunterController;
 
-    public override float CalculateScore(HunterState state, HunterHypothesis hypothesis, WorldState worldState)
-    {
-        return 0.7f; // Medium priority when no clues
-    }
+        public string actionName = "Patrol";
+        public string actionDescription = "Patrol randomly within the designated area.";
 
-    public override void Execute(HunterState state, WorldState worldState)
-    {
-        // This would trigger movement to patrol points
-        Debug.Log("Hunter: Patrolling...");
+        public PatrolAction(HunterAIController controller)
+        {
+            hunterController = controller;
+        }
+
+        public void Execute()
+        {
+            Debug.Log("PatrolAction.Execute() started");
+            if (hunterController == null) return;
+
+            NavMeshAgent agent = hunterController.GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                // Patrol logic: move to a random point within patrolRadius
+                Vector3 randomDirection = Random.insideUnitSphere * hunterController.patrolRadius;
+                randomDirection += hunterController.transform.position;
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(randomDirection, out hit, hunterController.patrolRadius, NavMesh.AllAreas))
+                {
+                    agent.speed = hunterController.patrolSpeed;
+                    agent.SetDestination(hit.position);
+                }
+            }
+            Debug.Log("PatrolAction.Execute() ended");
+        }
     }
 }

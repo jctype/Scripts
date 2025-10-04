@@ -1,22 +1,39 @@
-// InvestigateSoundAction.cs
 using UnityEngine;
+using UnityEngine.AI;
 using ProjectHounded.AI.Core;
 
-[CreateAssetMenu(menuName = "HunterAI/Actions/Investigate Sound")]
-public class InvestigateSoundAction : UtilityAction
+namespace ProjectHounded.AI.Actions
 {
-    public override bool IsValid(HunterState hunterState, WorldState worldState)
+    public class InvestigateSoundAction
     {
-        bool isValid = worldState.PrimarySoundClue.Loudness > 0.2f &&
-                      !worldState.IsPlayerInSight;
-        Debug.Log($"[InvestigateSound] Valid: {isValid} (Loudness: {worldState.PrimarySoundClue.Loudness:F2}, " +
-                 $"Player Visible: {worldState.IsPlayerInSight})");
-        return isValid;
-    }
+        private HunterAIController hunterController;
+        private SoundSystem soundSystem;
 
-    public override void Execute(HunterState hunterState, WorldState worldState)
-    {
-        Debug.Log($"[InvestigateSound] EXECUTING - Investigating {worldState.PrimarySoundClue} sound at " +
-                 $"{worldState.PrimarySoundClue.WorldPosition} (Loudness: {worldState.PrimarySoundClue.Loudness:F2})");
+        public string actionName = "Investigate Sound";
+        public string actionDescription = "Investigate the source of the loudest sound.";
+
+        public InvestigateSoundAction(HunterAIController controller, SoundSystem soundSys)
+        {
+            hunterController = controller;
+            soundSystem = soundSys;
+        }
+
+        public void Execute()
+        {
+            Debug.Log("InvestigateSoundAction.Execute() started");
+            if (hunterController == null || soundSystem == null) return;
+
+            SoundEvent soundEvent = soundSystem.GetMostRelevantSound();
+            if (soundEvent.IsValid)
+            {
+                NavMeshAgent agent = hunterController.GetComponent<NavMeshAgent>();
+                if (agent != null)
+                {
+                    agent.speed = hunterController.patrolSpeed;
+                    agent.SetDestination(soundEvent.WorldPosition);
+                }
+            }
+            Debug.Log("InvestigateSoundAction.Execute() ended");
+        }
     }
 }
