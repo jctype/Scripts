@@ -1,0 +1,20 @@
+public enum RebounderType
+{
+    None,
+    Basic,
+    Angled,
+    Sticky,
+    MultiSplit,
+    Hazard,
+    Boost,
+    WindDirect,
+    Teleport,
+    Stonebound_Pad,
+    Hammer_Ramp,
+    Magma_Grip,
+    Rune_of_Twinning,
+    Forge_Slag_Snare,
+    Bellows_Surge,
+    Gale_Rune,
+    Gate_of_Return
+}
